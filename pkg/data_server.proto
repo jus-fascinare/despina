@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package data_server;
+
+// The service definition
+service TrainingDataService {
+  // Convert raw data to training data
+  rpc Convert(stream RawDataRequest) returns (stream ResponseStatus);
+
+  // Return the final data created
+  rpc GetTrainingData(GetTrainingDataRequest) returns (TrainingData);
+
+  // Convert and append new raw data to existing training data
+  rpc AddTrainingData(stream MoreRawData) returns (stream ResponseStatus);
+
+  // Delete x lines of training data from the file
+  rpc RemoveTrainingData(RemoveRequest) returns (ResponseStatus);
+}
+
+// Input message definitions
+message RawDataRequest {
+  string data_file_name = 1;
+  string model_id = 2; // Optional
+  string data = 3;
+}
+
+message GetTrainingDataRequest {
+  string data_file_name = 1;
+}
+
+message MoreRawData {
+  string data_file_name = 1; // Optional
+  string model_id = 2; // Optional
+  string data_file_id = 3;
+  string data = 4;
+}
+
+message RemoveRequest {
+  string data_file_id = 1;
+}
+
+// Output message definitions
+message ResponseStatus {
+  enum Status {
+    UNKNOWN = 0;
+    SUCCESS = 1;
+    FAILURE = 2;
+    IN_PROGRESS = 3;
+  }
+  Status status = 1;
+}
+
+message TrainingData {
+  string data = 1;
+}
