@@ -1,5 +1,3 @@
-from concurrent import futures
-import grpc
 from pkg import data_server_pb2_grpc
 from pkg import data_server_pb2
 
